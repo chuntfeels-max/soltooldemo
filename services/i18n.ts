@@ -16,7 +16,8 @@ export const translations = {
       addPlaceholder: "Add custom address...",
       addLabel: "Remark/Name",
       addBtn: "Track",
-      noWatchlist: "No addresses in your watchlist yet."
+      noWatchlist: "No addresses in your watchlist yet.",
+      alreadyIn: "Address already in watchlist"
     },
     feed: {
       title: "Smart Money Feed",
@@ -31,7 +32,10 @@ export const translations = {
     header: {
       liveData: "Live Data",
       netWorth: "Total Net Worth",
-      refresh: "Refresh DAS"
+      refresh: "Refresh DAS",
+      activeIntelligence: "ACTIVE INTELLIGENCE",
+      portfolioValue: "Portfolio Value",
+      copyAddress: "Copy address"
     },
     analysis: {
       title: "Gemini Smart Insight",
@@ -94,7 +98,8 @@ export const translations = {
       addPlaceholder: "添加自定义地址...",
       addLabel: "备注/名称",
       addBtn: "追踪",
-      noWatchlist: "关注列表为空，请添加地址。"
+      noWatchlist: "关注列表为空，请添加地址。",
+      alreadyIn: "该地址已在关注列表中"
     },
     feed: {
       title: "聪明钱看板",
@@ -109,7 +114,10 @@ export const translations = {
     header: {
       liveData: "实时数据",
       netWorth: "账户总净值",
-      refresh: "刷新数据"
+      refresh: "刷新数据",
+      activeIntelligence: "ACTIVE INTELLIGENCE",
+      portfolioValue: "Portfolio Value",
+      copyAddress: "Copy address"
     },
     analysis: {
       title: "Gemini 智能分析",
