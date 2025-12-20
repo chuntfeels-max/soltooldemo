@@ -1,0 +1,5 @@
+{
+  "name": "SolWhaleTracker MVP",
+  "description": "High-precision Solana whale tracking and smart money analysis tool using Helius DAS API and Gemini intelligence.",
+  "requestFramePermissions": []
+}
