@@ -2,6 +2,9 @@
   "name": "sol-whale-tracker",
   "private": true,
   "version": "0.1.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "next dev -p 5173",
     "build": "next build",
