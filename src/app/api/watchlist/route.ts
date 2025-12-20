@@ -1,6 +1,18 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+// 创建 Supabase 管理员客户端（使用 service_role key）
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+);
 
 // GET: 返回所有关注地址（按added_at降序）
 export async function GET(request: NextRequest) {

@@ -1,0 +1,6 @@
+{
+  "/api/helius/assets/route": "app/api/helius/assets/route.js",
+  "/api/watchlist/route": "app/api/watchlist/route.js",
+  "/api/gemini/analyze/route": "app/api/gemini/analyze/route.js",
+  "/page": "app/page.js"
+}
