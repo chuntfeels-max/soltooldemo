@@ -1,9 +1,6 @@
 {
-  "/api/cron/update-elite/route": "app/api/cron/update-elite/route.js",
-  "/api/watchlist/route": "app/api/watchlist/route.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/api/watchlist/update-notes/route": "app/api/watchlist/update-notes/route.js",
-  "/api/gemini/analyze/route": "app/api/gemini/analyze/route.js",
   "/api/helius/assets/route": "app/api/helius/assets/route.js",
+  "/api/watchlist/route": "app/api/watchlist/route.js",
+  "/api/gemini/analyze/route": "app/api/gemini/analyze/route.js",
   "/page": "app/page.js"
 }
