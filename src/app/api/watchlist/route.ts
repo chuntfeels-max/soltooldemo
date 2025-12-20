@@ -3,20 +3,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // 创建 Supabase 管理员客户端（使用 service_role key）
-const supabaseAdmin = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
+function getSupabaseAdmin() {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase environment variables are not configured');
+  }
+
+  return createClient(supabaseUrl, supabaseKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false
     }
-  }
-);
+  });
+}
 
 // GET: 返回所有关注地址（按added_at降序）
 export async function GET(request: NextRequest) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const { data, error } = await supabaseAdmin
       .from('watchlist')
       .select('*')
@@ -52,6 +58,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const supabaseAdmin = getSupabaseAdmin();
     // 检查是否已存在
     const { data: existing } = await supabaseAdmin
       .from('watchlist')
@@ -108,6 +115,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    const supabaseAdmin = getSupabaseAdmin();
     let query = supabaseAdmin.from('watchlist').delete();
 
     if (id) {
