@@ -177,7 +177,7 @@ const App: React.FC = () => {
           return (b.heavyPositionScore || 0) - (a.heavyPositionScore || 0);
         default:
           return 0;
-      }
+    }
     }).slice(0, 5); // 只显示前5名
   }, [rankingCategory, eliteWhalesData]);
 
@@ -187,12 +187,12 @@ const App: React.FC = () => {
     return tokens
       .slice(0, 6)
       .map(t => ({ 
-        name: t.symbol, 
-        value: t.price_info?.total_price || 0 
+    name: t.symbol,
+    value: t.price_info?.total_price || 0
       }))
       .filter(d => d.value > 0);
   }, [tokens]);
-  
+
   const totalValue = useMemo(() => {
     return tokens.reduce((acc, t) => acc + (t.price_info?.total_price || 0), 0);
   }, [tokens]);
@@ -218,7 +218,7 @@ const App: React.FC = () => {
           </div>
           <h1 className="text-lg font-black tracking-tighter uppercase italic">WhaleTracker <span className="text-blue-500">v0.2</span></h1>
         </div>
-        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6">
           <button onClick={() => setLang(l => l === 'en' ? 'zh' : 'en')} className="p-2 text-slate-400 hover:text-white transition-colors"><Globe className="w-5 h-5" /></button>
           <button onClick={() => setShowBotModal(true)} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-blue-600/20"><Send className="w-3 h-3" /> {t.nav.tgBot}</button>
         </div>
@@ -265,27 +265,27 @@ const App: React.FC = () => {
                 >
                   {lang === 'zh' ? '胜率' : 'Win Rate'}
                 </button>
-                <button
+            <button 
                   onClick={() => setRankingCategory('earlyEntry')}
                   className={`flex-1 py-2 px-3 rounded-lg text-[10px] font-black transition-all ${
                     rankingCategory === 'earlyEntry'
                       ? 'bg-blue-600 text-white shadow-md border border-blue-500/50'
                       : 'text-slate-400 hover:text-slate-300'
                   }`}
-                >
+            >
                   {lang === 'zh' ? '狙击' : 'Snipe'}
-                </button>
-                <button
+            </button>
+            <button 
                   onClick={() => setRankingCategory('heavyPosition')}
                   className={`flex-1 py-2 px-3 rounded-lg text-[10px] font-black transition-all ${
                     rankingCategory === 'heavyPosition'
                       ? 'bg-blue-600 text-white shadow-md border border-blue-500/50'
                       : 'text-slate-400 hover:text-slate-300'
                   }`}
-                >
+            >
                   {lang === 'zh' ? '重仓' : 'Heavy'}
-                </button>
-              </div>
+            </button>
+          </div>
               {/* 最后更新时间 */}
               <div className="bg-slate-900/30 border border-white/5 rounded-xl px-3 py-2 mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -300,13 +300,13 @@ const App: React.FC = () => {
                   title={lang === 'zh' ? '手动刷新' : 'Manual Refresh'}
                 >
                   <RefreshCw className="w-3 h-3" />
-                </button>
-              </div>
+                  </button>
+                </div>
             </>
-          )}
+            )}
 
           <div className="space-y-3 max-h-[calc(100vh-200px)] overflow-y-auto pr-1 scrollbar-hide">
-            {sidebarTab === 'elite' ? (
+              {sidebarTab === 'elite' ? (
               sortedEliteWhales.map((whale, index) => (
                 <EliteRankingCard
                   key={whale.address}

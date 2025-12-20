@@ -45,32 +45,32 @@ export const getHoldings = async (address: string, useCache: boolean = true): Pr
 
     while (hasMore && page <= maxPages) {
       try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
             id: `page-${page}`,
-            method: 'getAssetsByOwner',
-            params: {
-              ownerAddress: address,
+        method: 'getAssetsByOwner',
+        params: {
+          ownerAddress: address,
               page: page,
               limit: 1000, // DAS API 支持的最大限制
-              displayOptions: { 
-                showFungible: true, 
+          displayOptions: {
+            showFungible: true,
                 showNativeBalance: page === 1, // 只在第一页获取原生余额
                 showCollectionMetadata: false,
                 showUnverifiedCollections: false
-              }
-            }
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP Error: ${response.status}`);
+          }
         }
+      })
+    });
 
-        const data = await response.json();
+    if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status}`);
+    }
+
+    const data = await response.json();
         if (data.error) {
           throw new Error(data.error.message || 'DAS API error');
         }
@@ -79,7 +79,7 @@ export const getHoldings = async (address: string, useCache: boolean = true): Pr
         if (!result) {
           throw new Error('Invalid response from DAS API');
         }
-
+    
         const items: WhaleAsset[] = result.items || [];
         allItems = allItems.concat(items);
 
@@ -135,7 +135,7 @@ export const getHoldings = async (address: string, useCache: boolean = true): Pr
         // 获取代币名称和符号
         const symbol = info.symbol || metadata?.symbol || 'UNKNOWN';
         const name = metadata?.name || symbol || 'Unknown Token';
-
+        
         return {
           mint: info.mint || item.id,
           symbol: symbol,
@@ -223,7 +223,7 @@ export const getRecentTransactions = async (address: string, useCache: boolean =
 
     const data = await response.json();
     if (!Array.isArray(data)) return getMockTransactions(address);
-
+    
     const transactions = data.map((tx: any) => ({
       signature: tx.signature,
       timestamp: tx.timestamp,
