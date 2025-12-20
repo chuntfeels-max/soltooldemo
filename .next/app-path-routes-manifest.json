@@ -1,0 +1,9 @@
+{
+  "/api/cron/update-elite/route": "/api/cron/update-elite",
+  "/api/watchlist/route": "/api/watchlist",
+  "/_not-found/page": "/_not-found",
+  "/api/watchlist/update-notes/route": "/api/watchlist/update-notes",
+  "/api/gemini/analyze/route": "/api/gemini/analyze",
+  "/api/helius/assets/route": "/api/helius/assets",
+  "/page": "/"
+}

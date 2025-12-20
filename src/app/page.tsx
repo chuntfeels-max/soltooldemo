@@ -45,6 +45,7 @@ export default function HomePage() {
   // 精英榜数据状态（用于定时更新）
   const [eliteWhalesData, setEliteWhalesData] = useState<WhaleProfile[]>(SMART_MONEY_WHALES);
   const [lastUpdateTime, setLastUpdateTime] = useLocalStorage<number>('sw_eliteLastUpdate', Date.now());
+  const [formattedUpdateTime, setFormattedUpdateTime] = useState<string>('');
 
   // 使用自定义 Hooks
   const { tokens, transactions, analysis, isLoading, isAnalyzing, error, fetchWalletData, refreshData } = useWalletData(activeAddress, lang);
@@ -145,6 +146,18 @@ export default function HomePage() {
     setLastUpdateTime(Date.now());
     console.log('[Elite Ranking] Updated at', new Date().toLocaleTimeString());
   }, [setLastUpdateTime]);
+
+  // 格式化更新时间（只在客户端执行，避免 hydration 错误）
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setFormattedUpdateTime(
+        new Date(lastUpdateTime).toLocaleTimeString(lang === 'zh' ? 'zh-CN' : 'en-US', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        })
+      );
+    }
+  }, [lastUpdateTime, lang]);
 
   // 每30分钟自动更新精英榜
   useEffect(() => {
@@ -297,7 +310,7 @@ export default function HomePage() {
                 <div className="flex items-center gap-2">
                   <RefreshCw className="w-3 h-3 text-slate-500" />
                   <span className="text-[10px] text-slate-500 uppercase tracking-wider">
-                    {lang === 'zh' ? '更新于' : 'Updated'}: {new Date(lastUpdateTime).toLocaleTimeString(lang === 'zh' ? 'zh-CN' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
+                    {lang === 'zh' ? '更新于' : 'Updated'}: {formattedUpdateTime || '--:--'}
                   </span>
                 </div>
                 <button
