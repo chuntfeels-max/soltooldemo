@@ -148,6 +148,11 @@ export const useWalletData = (initialAddress: string, lang: Language): UseWallet
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       setError(errorMessage);
       console.error('Wallet data fetch error:', err);
+      
+      // 如果获取失败，清空数据并设置错误状态
+      setTokens([]);
+      setTransactions([]);
+      setAnalysis(null);
     } finally {
       setIsLoading(false);
       setIsAnalyzing(false);

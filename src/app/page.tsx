@@ -6,7 +6,7 @@ import {
   Search, Activity, Wallet, Globe, Loader2, History, ArrowUpRight, 
   RefreshCw, Cpu, Database, Copy, CheckCircle2, TrendingUp, 
   LayoutDashboard, Users, Zap, Bookmark, ShieldCheck, Trash2, PieChart as PieIcon, Send,
-  Info
+  Info, Menu, X
 } from 'lucide-react';
 import WhaleCard from '../../components/WhaleCard';
 import EliteRankingCard from '../../components/EliteRankingCard';
@@ -41,6 +41,7 @@ export default function HomePage() {
   const [pendingWhaleAddress, setPendingWhaleAddress] = useState<string>('');
   const [newWhaleAddr, setNewWhaleAddr] = useState('');
   const [newWhaleLabel, setNewWhaleLabel] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false); // 移动端侧边栏开关
 
   // 精英榜数据状态（用于定时更新）
   const [eliteWhalesData, setEliteWhalesData] = useState<WhaleProfile[]>(SMART_MONEY_WHALES);
@@ -54,11 +55,6 @@ export default function HomePage() {
   const { recentSearches, addSearch } = useSearchHistory();
 
   const t = translations[lang];
-
-  // 检查当前数据是否为模拟数据
-  const isDataMock = useMemo(() => {
-    return tokens.length > 0 && tokens.every(t => t.isMock);
-  }, [tokens]);
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -230,22 +226,52 @@ export default function HomePage() {
         </div>
       </div>
 
-      <nav className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-600/20">
-            <Activity className="text-white w-5 h-5" />
+      <nav className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/5 px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* 移动端侧边栏按钮 */}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="lg:hidden p-2 text-slate-400 hover:text-white transition-colors"
+            aria-label="Toggle sidebar"
+          >
+            {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+          <div className="w-7 h-7 md:w-8 md:h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-600/20">
+            <Activity className="text-white w-4 h-4 md:w-5 md:h-5" />
           </div>
-          <h1 className="text-lg font-black tracking-tighter uppercase italic">WhaleTracker <span className="text-blue-500">v0.2</span></h1>
+          <h1 className="text-base md:text-lg font-black tracking-tighter uppercase italic">WhaleTracker <span className="text-blue-500">v0.2</span></h1>
         </div>
-        <div className="flex items-center gap-6">
-          <button onClick={() => setLang(l => l === 'en' ? 'zh' : 'en')} className="p-2 text-slate-400 hover:text-white transition-colors"><Globe className="w-5 h-5" /></button>
-          <button onClick={() => setShowBotModal(true)} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-blue-600/20"><Send className="w-3 h-3" /> {t.nav.tgBot}</button>
+        <div className="flex items-center gap-2 md:gap-6">
+          <button onClick={() => setLang(l => l === 'en' ? 'zh' : 'en')} className="p-2 text-slate-400 hover:text-white transition-colors"><Globe className="w-4 h-4 md:w-5 md:h-5" /></button>
+          <button onClick={() => setShowBotModal(true)} className="px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all text-[9px] md:text-[10px] font-black uppercase tracking-widest flex items-center gap-1 md:gap-2 shadow-lg shadow-blue-600/20"><Send className="w-3 h-3" /> <span className="hidden sm:inline">{t.nav.tgBot}</span></button>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto w-full p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* 左侧栏 */}
-        <aside className="lg:col-span-3 space-y-6">
+      <main className="max-w-7xl mx-auto w-full px-4 md:px-6 py-4 md:py-6">
+        {/* 移动端侧边栏遮罩 */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8">
+        {/* 左侧栏 - 移动端抽屉 */}
+        <aside className={`lg:col-span-3 space-y-4 md:space-y-6 fixed lg:static top-0 left-0 h-full lg:h-auto w-80 md:w-96 lg:w-auto bg-slate-950 lg:bg-transparent z-50 lg:z-auto transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        } overflow-y-auto lg:overflow-visible border-r lg:border-r-0 border-white/5 lg:border-none p-4 md:p-6 lg:p-0`}>
+          {/* 移动端关闭按钮 */}
+          <div className="lg:hidden flex items-center justify-between mb-4 pb-4 border-b border-white/5">
+            <h2 className="text-sm font-black text-white uppercase">Menu</h2>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="p-2 text-slate-400 hover:text-white transition-colors"
+              aria-label="Close sidebar"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
           <div className="bg-slate-900/40 p-1 rounded-xl border border-white/5 flex">
             <button onClick={() => setSidebarTab('elite')} className={`flex-1 py-2 text-[10px] font-black rounded-lg transition-all ${sidebarTab === 'elite' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-slate-300'}`}>{t.sidebar.tabElite}</button>
             <button onClick={() => setSidebarTab('watchlist')} className={`flex-1 py-2 text-[10px] font-black rounded-lg transition-all ${sidebarTab === 'watchlist' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-slate-300'}`}>{t.sidebar.tabWatchlist}</button>
@@ -263,7 +289,8 @@ export default function HomePage() {
 
           {sidebarTab === 'elite' && (
             <>
-              <div className="bg-slate-900/40 border border-white/5 rounded-xl p-1 mb-3 flex gap-1">
+              {/* 桌面端显示排序按钮，移动端在横向滚动头像框上方不显示 */}
+              <div className="hidden lg:block bg-slate-900/40 border border-white/5 rounded-xl p-1 mb-3 flex gap-1">
                 <button
                   onClick={() => setRankingCategory('todayPnl')}
                   className={`flex-1 py-2 px-3 rounded-lg text-[10px] font-black transition-all ${
@@ -305,8 +332,8 @@ export default function HomePage() {
                   {lang === 'zh' ? '重仓' : 'Heavy'}
                 </button>
               </div>
-              {/* 最后更新时间 */}
-              <div className="bg-slate-900/30 border border-white/5 rounded-xl px-3 py-2 mb-3 flex items-center justify-between">
+              {/* 最后更新时间 - 只在桌面端显示 */}
+              <div className="hidden lg:flex bg-slate-900/30 border border-white/5 rounded-xl px-3 py-2 mb-3 items-center justify-between">
                 <div className="flex items-center gap-2">
                   <RefreshCw className="w-3 h-3 text-slate-500" />
                   <span className="text-[10px] text-slate-500 uppercase tracking-wider">
@@ -326,18 +353,21 @@ export default function HomePage() {
 
           <div className="space-y-3 max-h-[calc(100vh-200px)] overflow-y-auto pr-1 scrollbar-hide">
             {sidebarTab === 'elite' ? (
-              sortedEliteWhales.map((whale, index) => (
-                <EliteRankingCard
-                  key={whale.address}
-                  whale={whale}
-                  rank={index + 1}
-                  category={rankingCategory}
-                  onClick={(address) => setActiveAddress(address)}
-                  onTrack={handleQuickTrack}
-                  isTracked={isInWatchlist(whale.address)}
-                  lang={lang}
-                />
-              ))
+              // 桌面端显示精英榜卡片，移动端已在搜索框下方显示横向滚动头像框
+              <div className="hidden lg:block">
+                {sortedEliteWhales.map((whale, index) => (
+                  <EliteRankingCard
+                    key={whale.address}
+                    whale={whale}
+                    rank={index + 1}
+                    category={rankingCategory}
+                    onClick={(address) => setActiveAddress(address)}
+                    onTrack={handleQuickTrack}
+                    isTracked={isInWatchlist(whale.address)}
+                    lang={lang}
+                  />
+                ))}
+              </div>
             ) : (
               watchlist.length > 0 ? (
                 watchlist.map(whale => (
@@ -361,71 +391,124 @@ export default function HomePage() {
         </aside>
 
         {/* 右侧主内容区 */}
-        <div className="lg:col-span-9 space-y-8">
+        <div className="lg:col-span-9 space-y-4 md:space-y-6 lg:space-y-8">
           {/* 搜索栏 */}
-          <form onSubmit={handleSearch} className="flex gap-3">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+              <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-500" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t.search.placeholder}
-                className="w-full bg-slate-900/60 border border-white/5 rounded-xl pl-12 pr-4 py-4 text-sm font-mono outline-none focus:border-blue-500/50 focus:bg-slate-900 transition-all"
+                className="w-full bg-slate-900/60 border border-white/5 rounded-xl pl-10 md:pl-12 pr-3 md:pr-4 py-3 md:py-4 text-sm font-mono outline-none focus:border-blue-500/50 focus:bg-slate-900 transition-all"
               />
             </div>
-            <button type="submit" className="px-6 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black uppercase tracking-wider text-xs transition-all shadow-lg shadow-blue-600/20">
+            <button type="submit" className="w-full sm:w-auto px-6 py-3 md:py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black uppercase tracking-wider text-xs transition-all shadow-lg shadow-blue-600/20">
               {t.search.button}
             </button>
           </form>
 
+          {/* 移动端精英榜横向滚动快捷头像框 */}
+          <div className="lg:hidden">
+            <div className="mb-2 px-1">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{t.sidebar.tabElite}</span>
+                <span className="text-[9px] text-slate-600">({sortedEliteWhales.length})</span>
+              </div>
+              <div className="overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1">
+                <div className="flex gap-2 min-w-max">
+                  {sortedEliteWhales.slice(0, 10).map((whale, index) => {
+                    const displayValue = rankingCategory === 'todayPnl' 
+                      ? (whale.todayPnl ? `+${whale.todayPnl.toLocaleString()}%` : whale.pnl30d)
+                      : rankingCategory === 'weeklyWinRate'
+                      ? (whale.weeklyWinRate ? `${whale.weeklyWinRate}%` : `${whale.winRate}%`)
+                      : rankingCategory === 'earlyEntry'
+                      ? (whale.earlyEntryScore ? `${whale.earlyEntryScore}` : 'N/A')
+                      : (whale.heavyPositionScore ? `${whale.heavyPositionScore}` : 'N/A');
+                    
+                    return (
+                      <button
+                        key={whale.address}
+                        onClick={() => {
+                          setActiveAddress(whale.address);
+                          setSidebarOpen(false);
+                        }}
+                        className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition-all min-w-[70px] ${
+                          activeAddress === whale.address
+                            ? 'bg-blue-600/20 border-blue-500/50 shadow-lg shadow-blue-600/10'
+                            : 'bg-slate-900/40 border-white/5 hover:bg-slate-800/50'
+                        }`}
+                      >
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600/30 to-purple-600/30 border-2 border-white/10 flex items-center justify-center text-white font-black text-xs shadow-lg">
+                          {index + 1}
+                        </div>
+                        <div className="text-[9px] font-black text-slate-300 text-center truncate w-full max-w-[60px]">
+                          {whale.label.slice(0, 6)}
+                        </div>
+                        <div className="text-[8px] font-black text-blue-400 tabular-nums">
+                          {displayValue}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* 钱包地址和状态 */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest">{t.header.activeIntelligence}</span>
-                {isDataMock ? (
-                  <span className="px-2 py-1 rounded bg-slate-800 text-slate-400 text-[8px] font-black uppercase tracking-widest border border-slate-700">• DEMO MODE (MOCK)</span>
+                {isLoading ? (
+                  <span className="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-[8px] font-black uppercase tracking-widest border border-blue-500/20 flex items-center gap-1">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    LOADING...
+                  </span>
+                ) : error ? (
+                  <span className="px-2 py-1 rounded bg-red-500/10 text-red-400 text-[8px] font-black uppercase tracking-widest border border-red-500/20">• ERROR</span>
                 ) : (
-                  <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-[8px] font-black uppercase tracking-widest border border-emerald-500/20">• LIVE ON-CHAIN</span>
+                  <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-[8px] font-black uppercase tracking-widest border border-emerald-500/20">• LIVE DATA</span>
                 )}
               </div>
-              <div className="flex items-center gap-2 font-mono text-sm">
-                <span className="text-slate-300">{activeAddress}</span>
+              <div className="flex items-center gap-2 font-mono text-xs sm:text-sm">
+                <span className="text-slate-300 break-all sm:break-normal">{activeAddress.slice(0, 8)}...{activeAddress.slice(-8)}</span>
                 <button
                   onClick={handleCopyAddress}
-                  className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white transition-colors"
+                  className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white transition-colors flex-shrink-0"
                   title={t.header.copyAddress}
                 >
                   {copySuccess ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                 </button>
               </div>
             </div>
-            <div className="flex gap-12 relative z-10 shrink-0">
-              <div className="text-right">
+            <div className="flex items-center gap-4 sm:gap-12 relative z-10 shrink-0">
+              <div className="text-left sm:text-right">
                 <p className="text-[10px] text-slate-500 uppercase font-black mb-1">{t.header.portfolioValue}</p>
-                <p className="text-4xl font-black text-white tabular-nums">${totalValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tabular-nums break-words">${totalValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
               </div>
-              <button onClick={handleRefresh} className="flex items-center justify-center w-10 h-10 bg-blue-600/10 border border-blue-500/20 rounded-full text-blue-400 hover:bg-blue-600 hover:text-white transition-all active:scale-95 shadow-lg">
+              <button onClick={handleRefresh} className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 bg-blue-600/10 border border-blue-500/20 rounded-full text-blue-400 hover:bg-blue-600 hover:text-white transition-all active:scale-95 shadow-lg">
                 <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
               </button>
             </div>
           </div>
 
-          {/* AI分析和持仓矩阵 */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-            <div className="bg-slate-900/40 border border-white/5 rounded-3xl p-6 space-y-6 shadow-xl relative overflow-hidden">
+          {/* AI分析和持仓矩阵 - 移动端上下排列，桌面端左右排列 */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
+            <div className="bg-slate-900/40 border border-white/5 rounded-3xl p-4 md:p-6 space-y-4 md:space-y-6 shadow-xl relative overflow-hidden">
               {isLoading && <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm z-20 flex items-center justify-center"><Loader2 className="w-8 h-8 text-blue-500 animate-spin" /></div>}
-              <div className="flex items-center justify-between border-b border-white/5 pb-4">
+              <div className="flex items-center justify-between border-b border-white/5 pb-3 md:pb-4">
                 <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-widest flex items-center gap-2"><Cpu className="w-4 h-4" /> AI Tactical Scan</h3>
                 {analysis && <span className={`text-[8px] font-black px-2 py-0.5 rounded border ${analysis.sentiment === 'Bullish' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/20'}`}>{analysis.sentiment}</span>}
               </div>
               {analysis ? (
-                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                  <p className="text-sm text-slate-200 leading-relaxed font-medium italic">"{analysis.summary}"</p>
-                  <div className="bg-black/30 p-4 rounded-xl border border-white/5">
+                <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium italic">"{analysis.summary}"</p>
+                  <div className="bg-black/30 p-3 md:p-4 rounded-xl border border-white/5">
                     <p className="text-[9px] text-slate-500 uppercase font-black mb-2 tracking-widest">Logic Reasoning</p>
-                    <p className="text-xs text-slate-400 leading-relaxed font-mono">{analysis.smartMoneyReasoning}</p>
+                    <p className="text-[10px] sm:text-xs text-slate-400 leading-relaxed font-mono">{analysis.smartMoneyReasoning}</p>
                   </div>
                   {/* 快捷加入关注按钮 */}
                   <div className="pt-2">
@@ -453,22 +536,31 @@ export default function HomePage() {
                     )}
                   </div>
                 </div>
-              ) : <div className="py-20 text-center text-slate-700 text-[10px] font-black uppercase tracking-widest animate-pulse">Running Neural Analytics...</div>}
+              ) : error ? (
+                <div className="py-20 text-center space-y-4">
+                  <div className="text-red-400 text-[10px] font-black uppercase tracking-widest">Error Loading Analysis</div>
+                  <div className="text-slate-500 text-xs font-mono">{error}</div>
+                </div>
+              ) : (
+                <div className="py-20 text-center text-slate-700 text-[10px] font-black uppercase tracking-widest animate-pulse">
+                  {isAnalyzing ? 'Running Neural Analytics...' : 'No data available'}
+                </div>
+              )}
             </div>
 
-            <div className="bg-slate-900/40 border border-white/5 rounded-3xl p-6 flex flex-col shadow-xl">
-              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6 flex items-center gap-2"><PieIcon className="w-4 h-4" /> Exposure Matrix</h3>
-              <div className="w-full h-[320px] relative">
+            <div className="bg-slate-900/40 border border-white/5 rounded-3xl p-4 md:p-6 flex flex-col shadow-xl">
+              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 md:mb-6 flex items-center gap-2"><PieIcon className="w-4 h-4" /> Exposure Matrix</h3>
+              <div className="w-full h-[240px] sm:h-[280px] md:h-[320px] relative">
                 {chartData.length > 0 ? (
                   <>
-                    <ResponsiveContainer width="100%" height={320}>
+                    <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie 
                           data={chartData} 
                           cx="50%" 
                           cy="50%" 
-                          innerRadius={80} 
-                          outerRadius={120} 
+                          innerRadius="45%" 
+                          outerRadius="65%" 
                           paddingAngle={2} 
                           dataKey="value" 
                           stroke="none"
@@ -506,11 +598,11 @@ export default function HomePage() {
                     </ResponsiveContainer>
                     {/* 中心显示总价值和主要资产 */}
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="text-center">
-                        <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                      <div className="text-center px-2">
+                        <div className="text-[9px] sm:text-[10px] md:text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">
                           TOTAL VALUE
                         </div>
-                        <div className="text-3xl font-black text-white tabular-nums mb-2">
+                        <div className="text-xl sm:text-2xl md:text-3xl font-black text-white tabular-nums mb-1 md:mb-2 break-words">
                           ${totalValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </div>
                         {chartData.length > 0 && (
@@ -581,31 +673,42 @@ export default function HomePage() {
           />
           
           <div className="bg-slate-900/20 border border-white/5 rounded-3xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-white/5 bg-white/5 flex items-center justify-between">
+            <div className="px-4 md:px-6 py-3 md:py-4 border-b border-white/5 bg-white/5 flex items-center justify-between">
               <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Live Transaction Stream</h3>
               <RefreshCw className={`w-3 h-3 text-slate-700 ${isLoading ? 'animate-spin' : ''}`} />
             </div>
             <div className="divide-y divide-white/5">
               {transactions.map(tx => (
-                <div key={tx.signature} className="px-6 py-5 flex items-center justify-between hover:bg-white/[0.02] transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-black/40 flex items-center justify-center border border-white/5">
-                      <ArrowUpRight className={`w-5 h-5 ${tx.type === 'SWAP' ? 'text-blue-500' : 'text-slate-600'}`} />
+                <div key={tx.signature} className="px-4 md:px-6 py-4 md:py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 hover:bg-white/[0.02] transition-colors">
+                  <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-black/40 flex items-center justify-center border border-white/5 flex-shrink-0">
+                      <ArrowUpRight className={`w-4 h-4 md:w-5 md:h-5 ${tx.type === 'SWAP' ? 'text-blue-500' : 'text-slate-600'}`} />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <span className="text-[8px] text-blue-500 font-black uppercase tracking-widest">{tx.type}</span>
-                      <p className="text-xs text-slate-300 font-medium leading-relaxed max-w-lg">{tx.description}</p>
+                      <p className="text-xs text-slate-300 font-medium leading-relaxed break-words">{tx.description}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    {tx.isMock && <span className="text-[7px] font-black text-orange-500/50 uppercase">Simulated</span>}
-                    <a href={`https://solscan.io/tx/${tx.signature}`} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black text-slate-600 hover:text-white uppercase transition-colors">Explorer</a>
+                  <div className="flex items-center gap-4 flex-shrink-0">
+                    <a href={`https://solscan.io/tx/${tx.signature}`} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black text-slate-600 hover:text-white uppercase transition-colors whitespace-nowrap">Explorer</a>
                   </div>
                 </div>
               ))}
-              {transactions.length === 0 && !isLoading && <div className="py-16 text-center text-slate-800 text-[10px] font-black uppercase">Quiet Sector: No Recent Events</div>}
+              {transactions.length === 0 && !isLoading && (
+                <div className="py-16 text-center space-y-2">
+                  {error ? (
+                    <>
+                      <div className="text-red-400 text-[10px] font-black uppercase tracking-widest">Error Loading Transactions</div>
+                      <div className="text-slate-600 text-xs font-mono">{error}</div>
+                    </>
+                  ) : (
+                    <div className="text-slate-600 text-[10px] font-black uppercase tracking-widest">No Recent Transactions</div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
+        </div>
         </div>
       </main>
 

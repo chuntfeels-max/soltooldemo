@@ -57,7 +57,52 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-800/60 bg-slate-900/30 backdrop-blur-md shadow-2xl">
-      <div className="overflow-x-auto">
+      {/* 移动端卡片式布局 */}
+      <div className="block md:hidden">
+        <div className="divide-y divide-slate-800/40">
+          {valuableTokens.map((token) => {
+            const value = token.price_info?.total_price || 0;
+            
+            return (
+              <div key={token.mint} className="p-3 hover:bg-slate-800/30 transition-all">
+                {/* 第一行：图标 + 名称 + 价值 */}
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="w-8 h-8 rounded-lg bg-slate-950 border border-slate-800 flex-shrink-0 overflow-hidden flex items-center justify-center shadow-lg shadow-black/50">
+                      {token.image_url ? (
+                        <img src={token.image_url} alt={token.symbol} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-[9px] font-black text-slate-600">{token.symbol.slice(0, 2)}</span>
+                      )}
+                    </div>
+                    <div className="text-sm font-black text-white uppercase tracking-tight">{token.symbol}</div>
+                  </div>
+                  <div className="text-right flex-shrink-0 ml-2">
+                    <div className="text-base font-black text-white tabular-nums">
+                      ${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </div>
+                  </div>
+                </div>
+                {/* 第二行：余额 */}
+                <div className="flex items-center text-xs text-slate-400 pl-11">
+                  <span className="font-bold">余额: </span>
+                  <span className="text-slate-300 font-bold tabular-nums ml-1">
+                    {token.balance.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+          {valuableTokens.length === 0 && (
+            <div className="px-6 py-20 text-center text-slate-700 italic font-black uppercase tracking-[0.2em] text-xs">
+              {t.empty}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 桌面端表格布局 */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-950/50 border-b border-slate-800/60">
