@@ -19,14 +19,15 @@ function getSupabaseAdmin() {
   });
 }
 
-// GET: 返回所有关注地址（按added_at降序）
+// GET: 返回所有关注地址（按创建时间降序）
 export async function GET(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin();
+    // 尝试使用 created_at，如果不存在则按 id 排序
     const { data, error } = await supabaseAdmin
       .from('watchlist')
       .select('*')
-      .order('added_at', { ascending: false });
+      .order('id', { ascending: false }); // 改为按 id 排序，避免列名不匹配
 
     if (error) {
       console.error('[Watchlist GET] Supabase error:', error);

@@ -86,7 +86,8 @@ ${languageInstruction}
 
     try {
       const genAI = new GoogleGenerativeAI(API_KEY);
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      // 使用 gemini-1.5-flash-latest 或 gemini-pro
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
       const result = await model.generateContent(prompt);
       const response = await result.response;
